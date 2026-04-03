@@ -1,7 +1,7 @@
 {
   "name": "jadlis-advisor-venture-deals",
   "description": "Venture deals advisor — Venture Deals (Feld, Mendelson): 8-mode dispatcher for term sheets, cap tables, fundraising, negotiation, convertible debt, VC diligence, acquisitions, and legal hygiene",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "beCyborg"
   },
