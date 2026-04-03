@@ -1,12 +1,12 @@
 ---
 name: advisor
 disable-model-invocation: true
+argument-hint: "[describe your fundraising or deal situation]"
 description: |
-  Venture deals advisor based on Venture Deals (Brad Feld, Jason Mendelson, 4th Ed. 2019).
-  8-mode dispatcher: term sheet parsing (Economics vs Control lens), fundraising pipeline,
-  negotiation coaching (6 styles with counter-strategies), cap table math (option pool shuffle),
+  Parse term sheets, model cap tables, and coach VC negotiations using the Economics vs Control framework from Venture Deals (Brad Feld & Jason Mendelson, 4th Ed. 2019). 8-mode dispatcher covers term sheet triage, fundraising pipeline, negotiation
+  coaching (6 styles with counter-strategies), cap table math (option pool shuffle detection),
   convertible debt (3 conversion methods), VC fund diligence (zombie detection), acquisition
-  LOI terms, legal housekeeping (83(b), 409A deadlines).
+  LOI terms, and legal housekeeping (83(b), 409A deadlines).
   Invoke explicitly via /jadlis-advisor-venture-deals:advisor.
   English triggers: term sheet, cap table, fundraising, venture capital, convertible note,
   SAFE, option pool, liquidation preference, VC negotiation, acquisition LOI, 83(b), 409A,
@@ -23,19 +23,6 @@ user-invocable: true
 
 Procedural advisor for venture deal mechanics from Venture Deals (Brad Feld, Jason Mendelson, 4th Ed. 2019). Provides specific frameworks Claude lacks from general training: the Economics vs Control lens for parsing term sheets (dividing clauses into 2 categories + noise instead of treating all as equal), liquidation preference decision matrix with 3 variants and break-even formulas, option pool shuffle detection, 3 convertible note conversion methods that produce different ownership outcomes, 6 negotiation styles with tactical counter-strategies, zombie VC detection algorithm, and 83(b)/409A as procedural deadlines with irreversible consequences.
 
-## When to Use
-
-- User received a term sheet and wants to understand or negotiate it
-- User is preparing for a fundraising round (how much, materials, VC targeting)
-- User is in active negotiation with a VC and needs tactical coaching
-- User wants to model dilution, option pool impact, or cap table scenarios
-- User is structuring a convertible note or SAFE (or choosing between them)
-- User wants to evaluate a VC fund (zombie detection, reserves, CVC flags)
-- User received a letter of intent for acquisition
-- User asks about legal hygiene: IP assignments, 83(b), 409A, corporate structure
-- User mentions "term sheet", "cap table", "option pool", "liquidation preference", "convertible note", "SAFE", "fundraising strategy", "VC negotiation"
-
-
 ## Context Gathering
 
 Before any recommendation, check `.claude/venture-deals.local.md`. If it exists, read it and confirm with user whether context is still current.
@@ -47,7 +34,7 @@ If no saved context, ask:
 4. **What's on the table**: Do you have a term sheet, LOI, or specific terms to discuss?
 5. **Alternatives**: Do you have competing offers or other options?
 
-Do NOT give recommendations until you have context. Every output MUST reference the user's specific situation, not generic advice.
+Do not give recommendations until you have context. Every output should reference the user's specific situation, not generic advice.
 
 ## Core Process: 8-Mode Dispatcher
 
@@ -111,7 +98,7 @@ Calculate using these formulas:
 - Price per share = Pre-money / Fully diluted shares (including new option pool)
 - Founder ownership = 100% - VC% - Option pool%
 
-CRITICAL: Detect option pool shuffle. When VC insists on expanding option pool from pre-money, calculate effective pre-money:
+Important: detect option pool shuffle. When VC insists on expanding option pool from pre-money, calculate effective pre-money:
 Effective pre-money = Stated pre-money - (New pool% × Post-money)
 
 Example: $5M investment at "$10M pre-money" with 20% post-money pool → Effective pre-money = $10M - (20% × $15M) = $10M - $3M = $7M. Founders own 46.67%, not 66.67%.
@@ -128,7 +115,7 @@ Use SAFE vs Note decision tree:
 
 Key mechanics: discount (typically 20%), valuation cap (ceiling on conversion price), interest (5-12%, mean 8%).
 
-CRITICAL: Detect cap-as-ceiling trap. VCs will peg their Series A valuation to the cap, treating it as a ceiling rather than a maximum. Advise entrepreneurs to not disclose cap until price is agreed.
+Important: detect cap-as-ceiling trap. VCs will peg their Series A valuation to the cap, treating it as a ceiling rather than a maximum. Advise entrepreneurs to not disclose cap until price is agreed.
 
 For conversion, calculate using all 3 methods and show differences: Pre-Money Method, Percentage-Ownership Method, Dollars-Invested Method.
 
@@ -143,7 +130,7 @@ Run zombie VC detection:
 4. Ask: "How many new investments will you make from current fund?"
 
 Also check:
-- CVC flags: balance sheet investing (no separate fund), strategic motivations, first right of refusal (NEVER give this)
+- CVC flags: balance sheet investing (no separate fund), strategic motivations, first right of refusal (strongly advise against granting this)
 - Reserve capacity: does fund have reserves for follow-on?
 - Key person: who is your champion at the firm, and will they stay?
 
@@ -174,7 +161,7 @@ Run 5-item legal audit:
 | 83(b) election | 30 days from grant | Cannot be cured — permanent tax damage |
 | Accredited investor check | At each round | Right of rescission for non-accredited |
 
-CRITICAL: 83(b) has a hard 30-day deadline that cannot be fixed. Flag with maximum urgency. 409A must be refreshed annually (12-month safe harbor).
+Important: 83(b) has a hard 30-day deadline that cannot be fixed — flag with high urgency. 409A must be refreshed annually (12-month safe harbor).
 
 See [legal-housekeeping.md](references/legal-housekeeping.md) for IP audit checklist and corporate structure guide.
 
